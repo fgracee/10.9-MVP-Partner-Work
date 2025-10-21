@@ -3,3 +3,10 @@
 # Attendees values are names of people who will be at the appointment. 
 # Meeting purpose is the reason for attendance
 # Title is what the entire dictionary is assigned to.
+
+def make_appt(date, start, end, location, attendees, purpose, title):
+    """
+    Create an appointment dictionary.
+    Args:
+    
+    """
