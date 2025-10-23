@@ -97,6 +97,7 @@ def show_appointments(name):
     except FileNotFoundError:
         print(f"\nFile '{name}' not found.")
 
+# Filter meetings by attendees
 def by_att(name, attendees):
     """
     This function reads the appointments from the specified CSV file and filters them by the given attendee.
@@ -124,6 +125,29 @@ def by_att(name, attendees):
     
     return filtered_appointments
 
+# Filter meetings by date
+def by_date(filename, date):
+    """
+    This function reads the appointments from the specified CSV file and filters them by a given date.
+    Args:
+        filename (str): The name or path of the CSV file to read.
+        date (str): The date to filter appointments by (format: 'YYYY-MM-DD').
+    Returns:
+        A list of appointments (as dictionaries) that occur on the specified date.
+        If there are none, return "No appointments on that day"
+    """
+    filtered_appointments = []
+    try:
+        with open(filename, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['date'] == date:
+                    filtered_appointments.append(row)
+    except FileNotFoundError:
+        print(f"\nFile '{filename}' not found.")
+    if not filtered_appointments:
+        return "No appointments on that day"
+
 # File for saving appointments
 filename = 'appointments.csv'
 file_create(filename)
@@ -131,18 +155,19 @@ file_create(filename)
 def main():
     """
     Main function to run the appointment management system.
-
-    Returns:
-        None
+    This function provides a command-line interface for users to manage appointments.
+    Users can view all appointments, add new appointments, filter by attendees, filter by date, and exit the program in a listed menu.
+    If user selects filter by attendees, prompt for attendee to search by. If there is no match, return "3
+    
     """
     while True:
         print("\nAppointment Management System")
         print("1. View all appointments")
         print("2. Add a new appointment")
-        print("3. View by attendees ")
-        print("4. Exit")
-
-        choice = input("Enter your choice (1-3): ").strip()
+        print("3. View by attendees")
+        print("4. View by date")
+        print("5. Exit")
+        choice = input("Enter your choice (1-5): ").strip()
 
         if choice == '1':
             show_appointments(filename)
@@ -159,6 +184,9 @@ def main():
                     print(f"Title: {app['title']}, Date: {app['date']}, Start: {app['start']}, End: {app['end']}, Location: {app['location']}, Attendees: {app['attendees']}, Purpose: {app['purpose']}")
                 print("-" * 60)
         elif choice == '4':
+            by_date_input = input("Enter the date to filter by (e.g., 2025-10-25): ").strip()
+            result = by_date(filename, by_date_input)
+        elif choice == '5':
             print("Exiting the appointment management system.")
             break
         else:
