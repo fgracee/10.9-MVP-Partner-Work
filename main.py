@@ -35,7 +35,6 @@ def file_create(name):
 
 
 # Create a new appointment dictionary
-
 def add_appointment(name):
     """    Prompts the user for appointment details and adds them to a CSV file.
 
@@ -65,7 +64,6 @@ def add_appointment(name):
     print(f"\nAppointment '{title}' added successfully to {name}!\n")
 
 # Display all existing appointments
-
 def show_appointments(name):
     """  Displays all appointments stored in a CSV file.
 
@@ -99,13 +97,36 @@ def show_appointments(name):
     except FileNotFoundError:
         print(f"\nFile '{name}' not found.")
 
+def by_att(name, attendees):
+    """
+    This function reads the appointments from the specified CSV file and filters them by the given attendee.
+    The attendee is expected to be a string that may match any of the attendees in the appointments.
+    If it does not match, return 'No appointments with [attendee]'
+    Args:
+        name (str): The name or path of the CSV file to read.
+        attendees (str): The attendee to filter appointments by.
+    Returns:
+        A list of appointments (as dictionaries) that include the specified attendee.
+    """
+    filtered_appointments = []
+    try:
+        with open(name, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                attendee_list = [att.strip() for att in row['attendees'].split(',')]
+                if attendees in attendee_list:
+                    filtered_appointments.append(row)
+    except FileNotFoundError:
+        print(f"\nFile '{name}' not found.")
+    
+    if not filtered_appointments:
+        return f"No appointments with {attendees}"
+    
+    return filtered_appointments
 
-
+# File for saving appointments
 filename = 'appointments.csv'
 file_create(filename)
-
-
-
 
 def main():
     """
@@ -118,7 +139,8 @@ def main():
         print("\nAppointment Management System")
         print("1. View all appointments")
         print("2. Add a new appointment")
-        print("3. Exit")
+        print("3. View by attendees ")
+        print("4. Exit")
 
         choice = input("Enter your choice (1-3): ").strip()
 
@@ -127,6 +149,16 @@ def main():
         elif choice == '2':
             add_appointment(filename)
         elif choice == '3':
+            attendee = input("Enter the attendee's name to filter by: ").strip()
+            result = by_att(filename, attendee)
+            if isinstance(result, str):
+                print(result)
+            else:
+                print(f"\nAppointments with {attendee}:\n" + "-" * 60)
+                for app in result:
+                    print(f"Title: {app['title']}, Date: {app['date']}, Start: {app['start']}, End: {app['end']}, Location: {app['location']}, Attendees: {app['attendees']}, Purpose: {app['purpose']}")
+                print("-" * 60)
+        elif choice == '4':
             print("Exiting the appointment management system.")
             break
         else:
@@ -134,3 +166,10 @@ def main():
     
 if __name__ == "__main__":
     main()
+
+# Feature ideas (think about lists of dictionaries as a tool. .json files?)
+    # Appointments organized by day
+    # Appointments organized by attendees
+    # Deleting an appointment
+
+
