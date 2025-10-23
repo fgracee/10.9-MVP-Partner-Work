@@ -1,6 +1,18 @@
+"""
+An appointment is a dictionary with the following keys:
+    title: a string, a name for the appointment
+    start: a time, whem the appointment starts
+    end: a time, when the appointment ends
+    date: a day, when the appointment happens
+    attendees: a list of strings, people going to the appointment
+    summary: a string, a brief description of the appointment
+"""
+
 import csv
 import os
+import datetime
 
+# Create a file to store appointments
 def file_create(name):
     """Creates a CSV file with predefined headers if it doesn't already exist.
 
@@ -21,6 +33,8 @@ def file_create(name):
             writer.writerow(['title', 'date', 'start', 'end', 'location', 'attendees', 'purpose'])
     return name
 
+
+# Create a new appointment dictionary
 
 def add_appointment(name):
     """    Prompts the user for appointment details and adds them to a CSV file.
@@ -50,6 +64,7 @@ def add_appointment(name):
     
     print(f"\nAppointment '{title}' added successfully to {name}!\n")
 
+# Display all existing appointments
 
 def show_appointments(name):
     """  Displays all appointments stored in a CSV file.
@@ -89,15 +104,33 @@ def show_appointments(name):
 filename = 'appointments.csv'
 file_create(filename)
 
-print("Choose what you'd like to do:")
-print("1. View all appointments")
-print("2. Add a new appointment")
 
-choice = input("Enter 1 or 2: ").strip()
 
-if choice == '1':
-    show_appointments(filename)
-elif choice == '2':
-    add_appointment(filename)
-else:
-    print("Invalid choice.")
+
+def main():
+    """
+    Main function to run the appointment management system.
+
+    Returns:
+        None
+    """
+    while True:
+        print("\nAppointment Management System")
+        print("1. View all appointments")
+        print("2. Add a new appointment")
+        print("3. Exit")
+
+        choice = input("Enter your choice (1-3): ").strip()
+
+        if choice == '1':
+            show_appointments(filename)
+        elif choice == '2':
+            add_appointment(filename)
+        elif choice == '3':
+            print("Exiting the appointment management system.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+    
+if __name__ == "__main__":
+    main()
